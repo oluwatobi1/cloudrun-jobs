@@ -5,7 +5,7 @@ app = Flask(__name__)
 @app.route('/')
 def hello():
     '''Health check'''
-    return "Hello World(New update)!"
+    return "Hello World(V2)!"
 
 if __name__ == '__main__':
     port = os.getenv("PORT", 8000)

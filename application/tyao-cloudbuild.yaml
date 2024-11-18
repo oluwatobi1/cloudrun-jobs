@@ -20,3 +20,6 @@ steps:
     '$TRIGGER_NAME', '--image', 'eu.gcr.io/$PROJECT_ID/$TRIGGER_NAME:$SHORT_SHA',
     '--region', 'europe-west1', '--allow-unauthenticated', '--cpu=2', '--memory=2Gi', '--cpu-boost', '--timeout=500s'
   ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY

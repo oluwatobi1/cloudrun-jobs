@@ -1,6 +1,11 @@
 
 steps: 
 
+	- id: pull-env
+	  name: 'gcr.io/cloud-builders/gsutil'
+	  args: [
+		'cp', 'gs://envs_store_playground/tyao/envs/cloudrun-123/cloudrun-123.env', 'application/.env']
+	
 - id: build-image
   name: "gcr.io/cloud-builders/docker"
   args: [
@@ -20,3 +25,6 @@ steps:
     '$TRIGGER_NAME', '--image', 'eu.gcr.io/$PROJECT_ID/$TRIGGER_NAME:$SHORT_SHA',
     '--region', 'europe-west1', '--allow-unauthenticated', '--cpu=2', '--memory=2Gi', '--cpu-boost', '--timeout=500s'
   ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY

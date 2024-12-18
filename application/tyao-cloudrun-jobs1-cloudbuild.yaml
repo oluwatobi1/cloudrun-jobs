@@ -1,6 +1,11 @@
 
 steps: 
 
+- id: pull-env
+  name: 'gcr.io/cloud-builders/gsutil'
+  args: [
+	'cp', 'gs://envs_store_playground/tyao/envs/cloudrun-jobs1/cloudrun-jobs1.env', 'application/.env']
+
 - id: build-image
   name: "gcr.io/cloud-builders/docker"
   args: [

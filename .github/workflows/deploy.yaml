@@ -25,18 +25,18 @@ jobs:
 
     - name: Build Docker image
       run: |
-        IMAGE_NAME=${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_REPO }}/application
+        IMAGE_NAME=${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_REPO }}
         GIT_COMMIT_ID=$(git rev-parse --short HEAD)
         docker build -t $IMAGE_NAME:$GIT_COMMIT_ID application
 
     - name: Push Docker image to Artifact Registry
       run: |
-        IMAGE_NAME=${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_REPO }}/application
+        IMAGE_NAME=${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_REPO }}
         GIT_COMMIT_ID=$(git rev-parse --short HEAD)
         docker push $IMAGE_NAME:$GIT_COMMIT_ID
 
     - name: Verify pushed image
       run: |
-        IMAGE_NAME=${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_REPO }}/application
+        IMAGE_NAME=${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_REPO }}
         GIT_COMMIT_ID=$(git rev-parse --short HEAD)
         gcloud artifacts docker images describe $IMAGE_NAME:$GIT_COMMIT_ID

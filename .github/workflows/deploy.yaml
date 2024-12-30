@@ -1,0 +1,42 @@
+name: Build and Push to GCP Artifact Registry
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+    - name: Configure Docker to use Artifact Registry
+      run: gcloud auth configure-docker ${{ secrets.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev
+
+    - name: Build Docker image
+      run: |
+        IMAGE_NAME=${{ secrets.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY_REPO }}/application
+        UNIQUE_TAG=$(date +%Y%m%d%H%M%S)
+        docker build -t $IMAGE_NAME:$UNIQUE_TAG application
+
+    - name: Push Docker image to Artifact Registry
+      run: |
+        IMAGE_NAME=${{ secrets.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY_REPO }}/application
+        UNIQUE_TAG=$(date +%Y%m%d%H%M%S)
+        docker push $IMAGE_NAME:$UNIQUE_TAG
+
+    - name: Verify pushed image
+      run: |
+        IMAGE_NAME=${{ secrets.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY_REPO }}/application
+        UNIQUE_TAG=$(date +%Y%m%d%H%M%S)
+        gcloud artifacts docker images describe $IMAGE_NAME:$UNIQUE_TAG
